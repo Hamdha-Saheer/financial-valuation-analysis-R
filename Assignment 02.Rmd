@@ -1,0 +1,138 @@
+---
+title: "Individual Assignment"
+author: "Hamdha Saheer"
+date: "2026-02-05"
+output: html_document
+---
+
+
+   Financial Valuation and Analysis Using R 
+   
+   
+SESSION 01: BOND VALUATION SCENARIO   
+     
+     Sunrise Holding PLC
+     
+```{r}
+# Bond Parameters
+face_value <- 5000      # Face value of the bond
+coupon_rate <- 0.07      # Annual coupon rate (7%)
+market_rate <- 0.09       # Market interest rate (9%)
+years_to_maturity <- 10   #  maturity of 10 years
+
+# Calculate annual coupon payment
+coupon_payment <- face_value * coupon_rate
+
+# calculates the present value of all future coupon payments from a bond
+pv_coupons <- sum(coupon_payment / (1 + market_rate)^(1:years_to_maturity))
+
+# Calculate present value of face value
+pv_principal <- face_value / (1 + market_rate)^years_to_maturity
+
+# Total fair value of bond
+fair_value <- pv_coupons + pv_principal
+
+# Output the result
+cat("Annual Coupon Payment: LKR", coupon_payment, "\n")
+cat("PV of Coupon Stream:   LKR", round(pv_coupons, 2), "\n")
+cat("PV of Principal:       LKR", round(pv_principal, 2), "\n")
+cat("Fair Value of the Bond: ", round(fair_value, 2), "\n")
+
+```
+When the Fair value of the bond (which is LKR 4358.23) is less than Face value of the bond (which is LKR 5000, at this instant, the bond is said to trade at a “Discount”. This status arises because the market yield currently prevailing at 9% , it is higher than the annual coupon payments calculated at a rate of 7%. If market interest rates rise further, the value of this bond will decrease. Then market rates will fall, and the bond’s price will increase.
+
+
+
+
+
+
+
+SESSION 02: EQUITY VALUATION SCENARIO
+
+    Oceanic Beverages PLC
+    
+```{r}
+# Scenario 03: Non-Constant growth in dividends
+# Inputs
+D0 <- 3.5           # Last dividend paid
+g1 <- 0.12         # Growth rate for first 4 years
+g2 <- 0.05         # Growth rate thereafter
+r  <- 0.14         # Required rate of return
+
+# Step 1: Calculate dividends for years 1 to 4
+D1 <- D0 * (1 + g1)
+D2 <- D1 * (1 + g1)
+D3 <- D2 * (1 + g1)
+D4 <- D3 * (1 + g1)
+
+# Step 2: Calculate terminal value at end of year 4
+TV <- D4 * (1 + g2) / (r - g2)
+
+# Step 3: Discount dividends and terminal value to present
+PV_D1 <- D1 / (1 + r)^1
+PV_D2 <- D2 / (1 + r)^2
+PV_D3 <- D3 / (1 + r)^3
+PV_D4 <- D4 / (1 + r)^4
+PV_TV <- TV / (1 + r)^4
+
+# Step 4: Calculate total present value (share price)
+fair_value <- PV_D1 + PV_D2 + PV_D3 + PV_D4+ PV_TV
+
+# Output result
+cat("Projected D1-D4:", round(D1,2), round(D2,2), round(D3,2), round(D4,2), "\n")
+cat("Terminal Value at Year 4: LKR", round(TV, 2), "\n")
+cat("Fair Value per Share: LKR", round(fair_value, 2), "\n")
+```
+	The valuation is highly sensitive to the perpetual growth rate and the required rate of return. Because the terminal value constitutes most of the share price, a small increase in the required return or a decrease in long-term growth would lead to a substantial drop in the fair value per share.
+
+
+
+SESSION 03: ANALYSIS OF HISTORICAL INVESTMENT PERFORMANCE
+
+     Tech Nova PLC
+    
+```{r}
+# Annual returns in decimal form
+returns <- c(0.18, 0.10, 0.04, 0.12, 0.20, 0.08)
+
+# Calculate average return
+average_return <- mean(returns)
+
+# Calculate sample standard deviation (risk)
+std_deviation <- sd(returns)
+
+# Display results in percentage format
+cat("Average Return:", round(average_return * 100, 2), "%\n")
+cat("Standard Deviation (Risk):", round(std_deviation * 100, 2), "%\n")
+```
+
+•	These measures quantify the trade-off between reward and uncertainty. A 12% mean return coupled with a 6.07% standard deviation indicates moderate volatility; The actual return has historically deviated from the average by roughly 6% in either direction.
+
+
+
+
+       Eco Grow PLC
+  Projected Return Analysis under Uncertain Outcomes
+```{r}
+# Define returns and probabilities
+returns_f <- c(0.25, 0.12, 0.05)         # Convert % to decimals
+probabilities <- c(0.25, 0.50, 0.25)   # Probabilities must sum to 1
+
+# Step 1: Expected return
+expected_return <- sum(returns_f * probabilities)
+
+# Step 2: Variance
+variance <- sum(probabilities * (returns_f - expected_return)^2)
+
+# Step 3: Standard deviation
+std_deviation <- sqrt(variance)
+
+# Output results
+cat("Expected Return:", round(expected_return * 100, 4), "%\n")
+cat("Variance:       ", round(variance * 10000, 2), "\n")
+cat("Standard Deviation (Risk):", round(std_deviation * 100, 4), "%\n")
+```
+
+	The distribution of returns influences the perceived risk. While Eco Grow PLC offers a higher expected return(13.5%) than Tech Nova PLC (12%), it also presents higher risk as evidences by its standard deviation (7.23% vs 6.07%). The 25% probability of achieving only a 5% return highlights the potential for significant downside compared to the expected mean.
+
+
